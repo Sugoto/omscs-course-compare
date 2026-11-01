@@ -271,6 +271,8 @@ const COURSES = [
     ]
   }
 ];
+// Most relevant on the left; ties keep their listed order.
+COURSES.sort((a, b) => b.relevance - a.relevance);
 
 const ROWS = [
   { section: "At a glance" },
