@@ -269,6 +269,23 @@ const COURSES = [
       "Mandatory weekly 90-minute live sessions double as supervised labs and grading sessions",
       "Recent reviewers call SDN the hardest project. The Apps project has shifted toward AI ideas"
     ]
+  },
+  {
+    id: "cs7210", code: "CS 7210",
+    name: "Distributed Computing",
+    url: "https://www.omscentral.com/courses/distributed-computing/reviews",
+    basis: "13 reviews · 2024–25 · course changed, older reviews excluded",
+    bottom: "The classic hard OMSCS systems course. You implement Paxos and a sharded, transactional key-value store yourself, which is directly valuable for backend work.",
+    youDiff: 4.5, youWhy: "Java and testing are familiar. Making consensus code survive DSLabs' exhaustive tests is the hard part. Recent reviewers log 12–35 hrs/wk, and Paxos and Project 4 take the most time.",
+    relevance: 5, relWhy: "Core distributed systems: RPC semantics, replication, consensus, sharding and transactions, with papers on real systems.",
+    exams: { label: "Proctored midterm + final", tone: "warn", note: "40% total, on Honorlock with access to the papers. Not cumulative. Mostly multiple choice, and questions draw on the papers as much as the slides." },
+    group: { label: "Individual", tone: "good", note: "One Fall 2024 reviewer says Project 4 allowed a partner." },
+    coursework: [
+      "5 Java projects (55%) on the DSLabs framework: P0 intro (5%), P1 exactly-once RPC (10%), P2 primary-backup (10%), P3 Paxos (15%), P4 sharded KV store with two-phase commit (15%)",
+      "DSLabs tests explore message orderings and failures, and Gradescope can fail tests that pass locally",
+      "The first half is lecture-heavy and the projects are back-loaded: P3 and P4 get about 4 weeks each",
+      "Projects were rebuilt in summer 2024 to sit closer to the public DSLabs version"
+    ]
   }
 ];
 // Most relevant on the left; ties keep their listed order.
