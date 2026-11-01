@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMSCS Course Compare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root { color-scheme: light; }
+img { max-width: 100%; }
+body { margin: 0; }
+/* Layout: header + course toggles, then one comparison grid — feature labels on the left, one column per course */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --fg: #1b2030;
+  --muted: #5d6478;
+  --line: #dfe2ea;
+  --accent: #8a7535;      /* GT old gold, darkened for contrast */
+  --accent-soft: #f1ead6;
+  --good: #1f7a4d; --good-bg: #e3f3ea;
+  --warn: #9a6200; --warn-bg: #fbefd9;
+  --bad: #b3372f;  --bad-bg: #fbe4e2;
+  --neutral-bg: #eceef3;
+  --font-display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151d; --surface: #1a1e29; --fg: #e6e8ef; --muted: #9aa1b4; --line: #2b3040;
+    --accent: #d2bc7a; --accent-soft: #2e2a1c;
+    --good: #6fd09d; --good-bg: #173326; --warn: #e8b55a; --warn-bg: #352812;
+    --bad: #f08a80; --bad-bg: #3a1c1a; --neutral-bg: #252a37;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151d; --surface: #1a1e29; --fg: #e6e8ef; --muted: #9aa1b4; --line: #2b3040;
+  --accent: #d2bc7a; --accent-soft: #2e2a1c;
+  --good: #6fd09d; --good-bg: #173326; --warn: #e8b55a; --warn-bg: #352812;
+  --bad: #f08a80; --bad-bg: #3a1c1a; --neutral-bg: #252a37;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 48px;
+}
+.wrap { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+header { display: flex; flex-direction: column; gap: 6px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; max-width: 70ch; }
+.picker {
+  margin: 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+  display: flex; flex-direction: column; gap: 10px; min-width: 0;
+}
+.lbl { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0 4px; }
+.toggles { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 16px; }
+.check { display: flex; align-items: baseline; gap: 8px; cursor: pointer; padding: 4px 0; min-width: 0; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; flex: none; align-self: center; cursor: pointer; }
+.check input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.c-code { font: 500 13px var(--font-mono); color: var(--fg); flex: none; }
+.c-name { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.check.all { padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+
+.scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.grid { display: grid; min-width: min-content; }
+.cell { padding: 14px 16px; border-top: 1px solid var(--line); min-width: 0; }
+.cell + .cell { border-left: 1px solid var(--line); }
+.rowlabel {
+  font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted); position: sticky; left: 0; background: var(--surface); z-index: 1;
+}
+.head { border-top: none; display: flex; flex-direction: column; gap: 4px; }
+.head .code { font-family: var(--font-mono); font-size: 12px; color: var(--accent); font-weight: 500; }
+.head a.name { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--fg); text-decoration: none; line-height: 1.25; text-wrap: balance; }
+.head a.name:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+.head .meta { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+.section {
+  grid-column: 1 / -1; padding: 10px 16px; border-top: 1px solid var(--line);
+  font-family: var(--font-display); font-weight: 500; font-size: 13px; background: var(--neutral-bg); color: var(--fg);
+}
+
+.meter { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+.bar { flex: 1; max-width: 120px; height: 6px; border-radius: 3px; background: var(--neutral-bg); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.why { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+.pill { display: inline-block; font: 500 12px var(--font-mono); padding: 3px 9px; border-radius: 999px; }
+.pill.good { color: var(--good); background: var(--good-bg); }
+.pill.warn { color: var(--warn); background: var(--warn-bg); }
+.pill.bad  { color: var(--bad);  background: var(--bad-bg); }
+
+ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+li::marker { color: var(--accent); }
+.downs li::marker { color: var(--bad); }
+.verdict { font-weight: 600; }
+.empty { padding: 32px; color: var(--muted); text-align: center; }
+footer { font-size: 12px; color: var(--muted); max-width: 80ch; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>OMSCS Course Compare</h1>
+  </header>
+
+  <fieldset class="picker">
+    <legend class="lbl">Courses to compare</legend>
+    <label class="check all"><input type="checkbox" id="t-all" checked><span class="c-code">Select all</span></label>
+    <div class="toggles" id="toggles"></div>
+  </fieldset>
+
+  <div class="scroller"><div class="grid" id="grid"></div></div>
+
+</div>
+
+<script>
+// Each course: summary fields for "At a glance", then a coursework list.
+// Rule: a fact lives in exactly one field.
+const COURSES = [
+  {
+    id: "pubp6725", code: "PUBP 6725",
+    name: "Information Security Policies & Strategies",
+    url: "https://www.omscentral.com/courses/information-security-policies-and-strategies/reviews",
+    basis: "5 reviews · 2024–25 · course changed, older reviews excluded",
+    bottom: "Low-effort filler to pair with a hard course. Expect to fight for grades.",
+    youDiff: 1.5, youWhy: "Nothing technical. The work is policy writing and coordinating groups.",
+    relevance: 2, relWhy: "Policy and business content at roughly Security+ level.",
+    exams: { label: "Open-book quizzes", tone: "good", note: "4 quizzes at 5% each. Not proctored." },
+    group: { label: "2 group projects + group discussion", tone: "bad", note: "Both projects are in the first half. Two peer evaluations can lower a free rider's grade." },
+    coursework: [
+      "Fall 2026: 4 assignments at 15% each, plus Perusall reading annotations at 5% per module",
+      "A1 Go Phish (group): run a phishing campaign, using a cloud email server you pay for",
+      "A2 Organizational Policy (group). A3 Policy Challenge, graded individually in a small-group discussion. A4 individual term paper"
+    ]
+  },
+  {
+    id: "cs6261", code: "CS 6261",
+    name: "Security Incident Response",
+    url: "https://www.omscentral.com/courses/security-incident-response/reviews",
+    basis: "3 reviews · 2024–26 · course changed, older reviews excluded",
+    bottom: "Light course with useful Splunk work, but thinly staffed. There are only 3 recent reviews.",
+    youDiff: 2, youWhy: "Splunk log hunting will feel familiar. The rest is weekly writing.",
+    relevance: 3, relWhy: "Hands-on defensive tooling and breach case studies. Dated on AI and deepfake threats.",
+    exams: { label: "None", tone: "good" },
+    group: { label: "2 projects + discussions", tone: "warn", note: "Teams were formed without regard to time zones in 2024. Staff will reassign you on request." },
+    coursework: [
+      "Fall 2026 grading: projects 40%, final project 30%, case studies 20%, current-event discussions 10%",
+      "Weekly case studies on past and current breaches, plus threat hunting in Splunk (largely self-taught)",
+      "Material is time-locked, so you can't work ahead"
+    ]
+  },
+  {
+    id: "cs6747", code: "CS 6747",
+    name: "Advanced Topics in Malware Analysis",
+    url: "https://www.omscentral.com/courses/advanced-topics-in-malware-analysis/reviews",
+    basis: "18 reviews · 2020–26",
+    bottom: "The strongest security elective here for learning. Find a partner and budget about 15 hrs/wk.",
+    youDiff: 3.5, youWhy: "Ghidra plugins and C++ PIN tools are familiar ground. Reading x86 assembly at scale and program-analysis theory are new.",
+    relevance: 4.5, relWhy: "Graduate-level reverse engineering and binary analysis, though more binary analysis than malware.",
+    exams: { label: "None", tone: "good", note: "Graded entirely on labs and paper summaries." },
+    group: { label: "Optional partner", tone: "good", note: "Most labs can be done solo or in pairs. Keep the same partner for Labs 3–4 and 5–6." },
+    coursework: [
+      "Fall 2026: 7 equally weighted labs (90% total) on one real Windows malware sample. Lab 7, symbolic analysis, is new",
+      "Lab 2: comment 1–2k lines of assembly (40–50 hrs). Labs 3–4: Ghidra plugins for def-use and data dependence (about 30 hrs each)",
+      "Lab 5: trace the sample with PIN against a fake C2. Lab 6: dynamic control dependence, the hardest so far",
+      "Slide summaries of about 30 papers plus forum participation: 10%. The only Fall 2026 extra credit is a course-survey bonus"
+    ]
+  },
+  {
+    id: "cs6265", code: "CS 6265",
+    name: "Information Security Lab: Binary Exploitation",
+    url: "https://www.omscentral.com/courses/information-security-lab-binary-exploitation/reviews",
+    basis: "5 reviews · 2024–26 · course changed, older reviews excluded",
+    bottom: "The best-loved course here and a real skill builder. Front-load it.",
+    youDiff: 4, youWhy: "Unless you've done CTFs, x86-64, GDB, ROP and mitigation bypasses are all new. Weeks can reach 30 hrs.",
+    relevance: 4.5, relWhy: "Hands-on exploitation of Linux binaries, with deep C, assembly and OS internals.",
+    exams: { label: "None", tone: "good", note: "Your grade is 100% lab points. No final." },
+    group: { label: "Individual", tone: "good" },
+    coursework: [
+      "10 labs: bomb lab, shellcode, stack overflow, stack protections, DEP/ASLR, ROP, remote exploitation, misc, heap, and the NSA Codebreaker Challenge",
+      "Most labs get 1–2 weeks and heap gets 3. Mostly C, some Python",
+      "Guideline: average 5+ challenges per lab for an A, 4+ for a B. About 40% of students get an A"
+    ]
+  },
+  {
+    id: "cse6220", code: "CSE 6220",
+    name: "High Performance Computing",
+    url: "https://www.omscentral.com/courses/high-performance-computing/reviews",
+    basis: "10 reviews · 2024–26 · course changed, older reviews excluded",
+    bottom: "A rigorous, high-value systems course. Take it alone, because the exams are the risk.",
+    youDiff: 4, youWhy: "The labs are fair for an SDE. The exams ask you to design and analyze parallel algorithms, with averages around 50.",
+    relevance: 4.5, relWhy: "Core parallel algorithms: memory hierarchy, shared memory and message passing, each with a performance model.",
+    exams: { label: "Proctored open-book midterm + final", tone: "warn", note: "Honorlock. Notes and internet allowed for lookup only. Heavily curved (about +25%)." },
+    group: { label: "Individual", tone: "good" },
+    coursework: [
+      "A Lab 0 warm-up and 3 labs in OpenMP, MPI and CUDA, plus an extra-credit lab worth about 10%",
+      "Labs are graded on correctness and performance on the PACE cluster. The last one is graded against your peers",
+      "Lectures teach the algorithms, not the tools. You learn OpenMP, MPI and CUDA from docs",
+      "Practice exams with answers come out 1–2 weeks before each exam"
+    ]
+  },
+  {
+    id: "cs6290", code: "CS 6290",
+    name: "High-Performance Computer Architecture",
+    url: "https://www.omscentral.com/courses/high-performance-computer-architecture/reviews",
+    basis: "59+ reviews · 2019–26",
+    bottom: "Great lectures and a solid foundation, held back by dull projects and slow grading.",
+    youDiff: 3, youWhy: "It builds on undergrad computer organization but goes deeper. The C++ simulator projects are easy for an SDE.",
+    relevance: 3.5, relWhy: "Pipelining, branch prediction, Tomasulo, caches and coherence, taught well but on dated hardware.",
+    exams: { label: "Proctored midterm + final", tone: "warn", note: "About 50% of the grade. Open notes, no internet, via Honorlock." },
+    group: { label: "Partner on some projects", tone: "good", note: "Students share benchmark results to sanity-check each other." },
+    coursework: [
+      "4 projects on the SESC C++ simulator in a VM, mostly parameter tuning with little code. Answers go in a Word template",
+      "Prof. Prvulovic's lectures with ungraded quizzes, also free on YouTube",
+      "Weekly office hours with the professor"
+    ]
+  },
+  {
+    id: "cs7295", code: "CS 7295",
+    name: "GPU Hardware and Software",
+    url: "https://www.omscentral.com/courses/gpu-hardware-and-software/reviews",
+    basis: "5 reviews · 2025–26 · new course",
+    bottom: "A promising modern course with a light exam load, but it's new and still changing.",
+    youDiff: 3, youWhy: "CUDA tuning is likely new, but approachable for a C/C++ developer.",
+    relevance: 4, relWhy: "CUDA, GPU architecture and transformer attention kernels. Broad rather than deep.",
+    exams: { label: "Quizzes + proctored final", tone: "good", note: "Quizzes (10%) allow one attempt. The final (10%) is on Honorlock with one sheet of notes, and an A needs at least 40% on it." },
+    group: { label: "Individual", tone: "good" },
+    coursework: [
+      "Summer 2026 projects on the ICE cluster: P1 CUDA basics (5%), P2 CUDA optimization (20%), P3 warp scheduler and tensor-core timing in a GPU simulator (20%), P4 ML algorithms in CUDA (15%), P5 a GPU code-analysis pass in Python (20%)",
+      "Reviewers say P2 and P4 carry most of the learning",
+      "Weekly paper readings. Forum participation can lift you up to 3% near a grade boundary"
+    ]
+  },
+  {
+    id: "cs6271", code: "CS 6271",
+    name: "Cybersecurity of Drones",
+    url: "https://omscs.gatech.edu/cs-6271-cybersecurity-drones",
+    basis: "No OMSCS reviews yet · Fall 2026 syllabus",
+    bottom: "A niche course on cyber-physical systems (CPS) security that's untested online.",
+    youDiff: 3.5, youWhy: "Python/C++ and Ghidra are approachable. Embedded systems, real-time operating systems (RTOS), control theory and drone flight software are likely new. This rating is based on the syllabus alone.",
+    relevance: 3.5, relWhy: "Graduate-level CPS security: drone architecture, sensor spoofing, firmware analysis and adversarial ML. It's niche outside defense and robotics, and it doesn't count toward any specialization.",
+    exams: { label: "16 quizzes + proctored final", tone: "warn", note: "Quizzes are 32%. The final is 18%, on Honorlock with no outside aids." },
+    group: { label: "Individual", tone: "good", note: "No group work in the syllabus." },
+    coursework: [
+      "5 mini projects (30%) in Python/C++ using the ArduPilot SITL drone simulator, Gazebo and Ghidra/IDA, on themes like MAVLink packet security and sensor-spoofing detection. You submit short reports plus working code",
+      "Recorded paper presentation (20%): critique 3 papers from top security venues, compare them and propose a research idea, then respond to classmates' presentations"
+    ]
+  },
+  {
+    id: "cs6211", code: "CS 6211",
+    name: "System Design for Cloud Computing",
+    url: "https://www.omscentral.com/courses/special-topics-systems-issues-in-cloud-computing/reviews",
+    basis: "3 reviews since 2024 (17 total, 2021–25) · instructor's course page",
+    bottom: "Intense, hands-on and highly rated, with a \"coding bootcamp\" feel.",
+    youDiff: 4, youWhy: "Go/C++ and Kubernetes code will feel familiar. SDN and NFV networking (Mininet, Ryu, OpenFlow) are likely new. Recent reviewers log 15–40 hrs/wk, and AOS (CS 6210) is the listed prerequisite.",
+    relevance: 4.5, relWhy: "You build each layer of the cloud stack yourself: networking, a MapReduce runtime, network-function orchestration and a cloud app. It's directly useful for backend SDE work.",
+    exams: { label: "None", tone: "good", note: "16 lecture quizzes, which need 100% but allow unlimited attempts." },
+    group: { label: "Pairs (optional)", tone: "good", note: "Pick your own partner or work alone. Staff check GitHub commits for equal contribution." },
+    coursework: [
+      "4 modules, each with recorded lectures, weekly workshops and a capstone project: SDN (Mininet, Ryu, OpenFlow), a MapReduce runtime on Kubernetes (Go or C++), NFV orchestration, and a self-defined cloud app on Azure",
+      "Graded A or F: an A needs 100% on every quiz and an \"Accept\" on every workshop and project",
+      "Mandatory weekly 90-minute live sessions double as supervised labs and grading sessions",
+      "Recent reviewers call SDN the hardest project. The Apps project has shifted toward AI ideas"
+    ]
+  }
+];
+
+const ROWS = [
+  { section: "At a glance" },
+  { label: "Bottom line", render: c => `<div class="verdict">${c.bottom}</div>` },
+  { label: "Difficulty for you", render: c => meter(c.youDiff) + `<div class="why">${c.youWhy}</div>` },
+  { label: "Relevance", render: c => meter(c.relevance) + `<div class="why">${c.relWhy}</div>` },
+  { label: "Exams", render: c => pill(c.exams) },
+  { label: "Group work", render: c => pill(c.group) },
+  { label: "Coursework", render: c => list(c.coursework) }
+];
+
+function meter(v) {
+  return `<div class="meter"><span>${v.toFixed(1)}</span><span class="bar"><i style="width:${v / 5 * 100}%"></i></span></div>`;
+}
+function pill(p) { return `<span class="pill ${p.tone}">${p.label}</span>` + (p.note ? `<div class="why">${p.note}</div>` : ""); }
+function list(items, cls = "") { return `<ul class="${cls}">${items.map(i => `<li>${i}</li>`).join("")}</ul>`; }
+
+const visible = new Set(COURSES.map(c => c.id));
+
+function renderToggles() {
+  const box = document.getElementById("toggles");
+  const all = document.getElementById("t-all");
+  const syncAll = () => {
+    all.checked = visible.size === COURSES.length;
+    all.indeterminate = visible.size > 0 && visible.size < COURSES.length;
+  };
+  COURSES.forEach(c => {
+    const l = document.createElement("label");
+    l.className = "check";
+    l.innerHTML = `<input type="checkbox" id="t-${c.id}" checked><span class="c-code">${c.code}</span><span class="c-name">${c.name}</span>`;
+    l.querySelector("input").addEventListener("change", e => {
+      e.target.checked ? visible.add(c.id) : visible.delete(c.id);
+      syncAll(); renderGrid();
+    });
+    box.appendChild(l);
+  });
+  all.addEventListener("change", () => {
+    COURSES.forEach(c => {
+      document.getElementById("t-" + c.id).checked = all.checked;
+      all.checked ? visible.add(c.id) : visible.delete(c.id);
+    });
+    syncAll(); renderGrid();
+  });
+  syncAll();
+}
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  const shown = COURSES.filter(c => visible.has(c.id));
+  if (!shown.length) { grid.style.gridTemplateColumns = "1fr"; grid.innerHTML = `<div class="empty">Pick a course above to see its breakdown.</div>`; return; }
+  grid.style.gridTemplateColumns = `140px repeat(${shown.length}, minmax(260px, 1fr))`;
+  let html = `<div class="cell rowlabel head"></div>` + shown.map(c =>
+    `<div class="cell head"><span class="code">${c.code}</span><a class="name" href="${c.url}" target="_blank" rel="noopener">${c.name}</a></div>`
+  ).join("");
+  ROWS.forEach(r => {
+    if (r.section) { html += `<div class="section">${r.section}</div>`; return; }
+    html += `<div class="cell rowlabel">${r.label}</div>` + shown.map(c => `<div class="cell">${r.render(c)}</div>`).join("");
+  });
+  grid.innerHTML = html;
+}
+
+renderToggles();
+renderGrid();
+</script>
+</body>
+</html>
