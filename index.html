@@ -55,6 +55,7 @@ header { display: flex; flex-direction: column; gap: 6px; }
 h1 { font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
 h2 { font-family: var(--font-display); font-weight: 700; font-size: 21px; margin: 16px 0 0; letter-spacing: -0.01em; }
 .block { display: flex; flex-direction: column; gap: 16px; }
+#required .scroller { max-width: 900px; }
 .sub { color: var(--muted); margin: 0; max-width: 70ch; }
 .picker {
   margin: 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
@@ -118,6 +119,11 @@ footer { font-size: 12px; color: var(--muted); max-width: 80ch; }
       <label class="check all"><input type="checkbox" checked><span class="c-code">Select all</span></label>
       <div class="toggles"></div>
     </fieldset>
+    <div class="scroller"><div class="grid"></div></div>
+  </section>
+
+  <section class="block" id="required">
+    <h2>Required Course</h2>
     <div class="scroller"><div class="grid"></div></div>
   </section>
 
@@ -384,19 +390,60 @@ const PAIR_ROWS = [
   { label: "Coursework", render: c => list(c.coursework) }
 ];
 
+// Compulsory, so it's judged on structure, exams and gotchas rather than whether to take it.
+const REQUIRED = [
+  {
+    id: "cs6515", code: "CS 6515",
+    name: "Introduction to Graduate Algorithms",
+    url: "https://www.omscentral.com/courses/introduction-to-graduate-algorithms/reviews",
+    basis: "48 reviews · Spring 2025–Summer 2026 · Fall 2026 syllabus",
+    bottom: "Exam-only and graded hard. Passing takes learning the staff's answer format as much as the algorithms, and you need 70% for a B.",
+    youDiff: 4.5, youWhy: "Undergrad algorithms gives you a head start on DP and graphs, but day-to-day coding helps little: almost the whole grade is closed-book algorithm design under proctoring. Reviewers mostly log 12–20 hrs/wk, with spikes before exams.",
+    exams: { label: "5 closed-book proctored exams", tone: "bad", note: "Fall 2026: Exams 1–2 at 10% each, Exams 3–4 at 20% each, and a cumulative multiple-choice final at 30% (+10% extra credit). Exams mix free-response design questions with multiple choice." },
+    structure: [
+      "Topics: dynamic programming, divide and conquer, randomized algorithms (RSA), graphs, max flow, linear programming and NP-completeness. Required textbook: DPV",
+      "Weekly homework (written + Python coding) is optional and worth 0%, but it mirrors the exam questions. Practice solutions come out mid-week",
+      "The other 10% is quizzes: content 6% (open note), logistics 3%, format 1%",
+      "Cutoffs are A ≥85% and B ≥70% with no rounding, so 84.99% is a B",
+      "The format keeps changing: Spring 2026 had 3 exams weighted 25/30/35 by your score. There are no reviews of the Fall 2026 five-exam format yet",
+      "Summer covers the same material in fewer weeks, and reviewers found its exams harder"
+    ],
+    gotchas: [
+      "Free-response answers must follow the staff format, with algorithm, correctness and runtime in labeled sections. One slip can cost 8–12 of 20 points, and the same error can be penalized again downstream",
+      "A correct but brute-force or slower-than-expected algorithm is graded as wrong",
+      "For graph problems you must use known algorithms as unmodified black boxes. AI study help tends to modify them",
+      "In 3-exam terms, Exam 1 (DP, divide and conquer) was the weed-out. Many reviewers scored 35–41/60 on it and still passed",
+      "Proctoring is strict: Honorlock with a side-angle camera (you may need a webcam or tripod), room scan, about 3 hours with no break. You can't discuss the course with anyone while an exam window is open",
+      "Exam feedback doesn't show which multiple-choice questions you missed",
+      "A regrade re-checks the whole question and can lower your score. Reviewers also report inconsistent grading between TAs",
+      "Lectures are old and don't always match the current instructor's approach"
+    ]
+  }
+];
+
+const REQ_ROWS = [
+  { section: "Structure and exams" },
+  { label: "Bottom line", render: c => `<div class="verdict">${c.bottom}</div>` },
+  { label: "Difficulty for you", render: c => meter(c.youDiff) + `<div class="why">${c.youWhy}</div>` },
+  { label: "Exams", render: c => pill(c.exams) },
+  { label: "Structure", render: c => list(c.structure) },
+  { label: "Gotchas", render: c => list(c.gotchas, "downs") }
+];
+
 function meter(v) {
   return `<div class="meter"><span>${v.toFixed(1)}</span><span class="bar"><i style="width:${v / 5 * 100}%"></i></span></div>`;
 }
 function pill(p) { return `<span class="pill ${p.tone}">${p.label}</span>` + (p.note ? `<div class="why">${p.note}</div>` : ""); }
 function list(items, cls = "") { return `<ul class="${cls}">${items.map(i => `<li>${i}</li>`).join("")}</ul>`; }
 
-// One picker + grid per section, each with its own selection.
+// One picker + grid per section, each with its own selection. A section without a picker shows every course.
 function setup(root, courses, rows) {
   const visible = new Set(courses.map(c => c.id));
   const box = root.querySelector(".toggles");
   const all = root.querySelector(".check.all input");
   const grid = root.querySelector(".grid");
   const inputs = {};
+  if (!box) { renderGrid(); return; }
 
   function renderGrid() {
     const shown = courses.filter(c => visible.has(c.id));
@@ -439,6 +486,7 @@ function setup(root, courses, rows) {
 }
 
 setup(document.getElementById("core"), COURSES, ROWS);
+setup(document.getElementById("required"), REQUIRED, REQ_ROWS);
 setup(document.getElementById("pairing"), PAIRING, PAIR_ROWS);
 </script>
 </body>
