@@ -53,6 +53,8 @@ body {
 .wrap { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 header { display: flex; flex-direction: column; gap: 6px; }
 h1 { font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 21px; margin: 16px 0 0; letter-spacing: -0.01em; }
+.block { display: flex; flex-direction: column; gap: 16px; }
 .sub { color: var(--muted); margin: 0; max-width: 70ch; }
 .picker {
   margin: 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
@@ -110,13 +112,24 @@ footer { font-size: 12px; color: var(--muted); max-width: 80ch; }
     <h1>OMSCS Course Compare</h1>
   </header>
 
-  <fieldset class="picker">
-    <legend class="lbl">Courses to compare</legend>
-    <label class="check all"><input type="checkbox" id="t-all" checked><span class="c-code">Select all</span></label>
-    <div class="toggles" id="toggles"></div>
-  </fieldset>
+  <section class="block" id="core">
+    <fieldset class="picker">
+      <legend class="lbl">Courses to compare</legend>
+      <label class="check all"><input type="checkbox" checked><span class="c-code">Select all</span></label>
+      <div class="toggles"></div>
+    </fieldset>
+    <div class="scroller"><div class="grid"></div></div>
+  </section>
 
-  <div class="scroller"><div class="grid" id="grid"></div></div>
+  <section class="block" id="pairing">
+    <h2>Pairing Courses</h2>
+    <fieldset class="picker">
+      <legend class="lbl">Courses to compare</legend>
+      <label class="check all"><input type="checkbox" checked><span class="c-code">Select all</span></label>
+      <div class="toggles"></div>
+    </fieldset>
+    <div class="scroller"><div class="grid"></div></div>
+  </section>
 
 </div>
 
@@ -124,38 +137,6 @@ footer { font-size: 12px; color: var(--muted); max-width: 80ch; }
 // Each course: summary fields for "At a glance", then a coursework list.
 // Rule: a fact lives in exactly one field.
 const COURSES = [
-  {
-    id: "pubp6725", code: "PUBP 6725",
-    name: "Information Security Policies & Strategies",
-    url: "https://www.omscentral.com/courses/information-security-policies-and-strategies/reviews",
-    basis: "5 reviews · 2024–25 · course changed, older reviews excluded",
-    bottom: "Low-effort filler to pair with a hard course. Expect to fight for grades.",
-    youDiff: 1.5, youWhy: "Nothing technical. The work is policy writing and coordinating groups.",
-    relevance: 2, relWhy: "Policy and business content at roughly Security+ level.",
-    exams: { label: "Open-book quizzes", tone: "good", note: "4 quizzes at 5% each. Not proctored." },
-    group: { label: "2 group projects + group discussion", tone: "bad", note: "Both projects are in the first half. Two peer evaluations can lower a free rider's grade." },
-    coursework: [
-      "Fall 2026: 4 assignments at 15% each, plus Perusall reading annotations at 5% per module",
-      "A1 Go Phish (group): run a phishing campaign, using a cloud email server you pay for",
-      "A2 Organizational Policy (group). A3 Policy Challenge, graded individually in a small-group discussion. A4 individual term paper"
-    ]
-  },
-  {
-    id: "cs6261", code: "CS 6261",
-    name: "Security Incident Response",
-    url: "https://www.omscentral.com/courses/security-incident-response/reviews",
-    basis: "3 reviews · 2024–26 · course changed, older reviews excluded",
-    bottom: "Light course with useful Splunk work, but thinly staffed. There are only 3 recent reviews.",
-    youDiff: 2, youWhy: "Splunk log hunting will feel familiar. The rest is weekly writing.",
-    relevance: 3, relWhy: "Hands-on defensive tooling and breach case studies. Dated on AI and deepfake threats.",
-    exams: { label: "None", tone: "good" },
-    group: { label: "2 projects + discussions", tone: "warn", note: "Teams were formed without regard to time zones in 2024. Staff will reassign you on request." },
-    coursework: [
-      "Fall 2026 grading: projects 40%, final project 30%, case studies 20%, current-event discussions 10%",
-      "Weekly case studies on past and current breaches, plus threat hunting in Splunk (largely self-taught)",
-      "Material is time-locked, so you can't work ahead"
-    ]
-  },
   {
     id: "cs6747", code: "CS 6747",
     name: "Advanced Topics in Malware Analysis",
@@ -301,58 +282,164 @@ const ROWS = [
   { label: "Coursework", render: c => list(c.coursework) }
 ];
 
+// Pairing courses are light electives taken alongside a hard course, so they're judged on hassle.
+const PAIRING = [
+  {
+    id: "cs8803o15", code: "CS 8803 O15",
+    name: "Introduction to Computer Law",
+    url: "https://www.omscentral.com/courses/special-topics-introduction-to-computer-law/reviews",
+    basis: "7 reviews · 2024–26 · Fall 2026 syllabus",
+    bottom: "The lowest-hassle pairing here: two long papers and open-book quizzes, with no group work.",
+    hassle: 2, hassleWhy: "Reviewers log 2–10 hrs/wk, but the two papers bunch the work into a few heavy weeks.",
+    pairWith: "Pairs well with a medium course. One reviewer who paired it with GA wouldn't do it again.",
+    exams: { label: "Open-book quizzes", tone: "good", note: "Weekly timed quizzes (15–30 min) worth 20%, not proctored. One reviewer says the short writing assessments (10%) are proctored." },
+    group: { label: "Individual", tone: "good" },
+    pains: [
+      "Rubrics don't say how much effort is enough. One reviewer's report ran past 20 pages",
+      "Writing is graded inconsistently, losing points for both too much and too little detail",
+      "Grades can come back weeks after the due date, and TAs don't always answer questions"
+    ],
+    coursework: [
+      "Fall 2026 grading: code (forensic) analysis project 35%, acquisition project 25%, quizzes 20%, discussion 10%, writing assessments 10%",
+      "Code analysis: compare two IDEs in a report of about 20 pages (20–30 hrs). Needs basic Java",
+      "Acquisition project: legal review of a business acquisition, about 10 pages (15–40 hrs)",
+      "12 weekly discussion posts, graded leniently. Topics: the US legal system, IP, licensing, contracts and privacy"
+    ]
+  },
+  {
+    id: "cs6300", code: "CS 6300",
+    name: "Software Development Process",
+    url: "https://www.omscentral.com/courses/software-development-process/reviews",
+    basis: "40 reviews · 2024–26 · Fall 2026 syllabus",
+    bottom: "Technically trivial for you. The hassle is a lockstep weekly schedule, an assigned team and one tricky assignment.",
+    hassle: 3, hassleWhy: "The Java, Git and testing work is easy for an SDE, and most reviewers log 5–12 hrs/wk.",
+    pairWith: "A common pick to pair with a harder course or for an easy summer. Some weeks stack A6 on top of the team project.",
+    exams: { label: "None", tone: "good", note: "Lesson quizzes allow unlimited retakes and count toward the 3% participation grade." },
+    group: { label: "Assigned team project", tone: "bad", note: "Staff form teams from a survey and won't take requests. Teammates' peer evaluations feed your 10% collaboration grade." },
+    pains: [
+      "A6, a formal-logic test-design assignment, sinks many grades. Gradescope shows only a provisional score",
+      "Assignments open about a week before they're due, so you can't work ahead",
+      "Lessons must be watched on Ed over the term, not crammed at the end, for participation credit",
+      "Grades usually return in about 2 weeks. One Spring 2026 reviewer waited 4–5",
+      "AI coding tools are banned"
+    ],
+    coursework: [
+      "Fall 2026 grading: individual assignments 44%, individual project 25%, team project 18%, collaboration 10%, participation 3%",
+      "Assignments cover Git, Java, unit testing, TDD, UML and design. Most run on Gradescope with unlimited submissions",
+      "Individual project: a Java command-line tool built over several deliverables. Team project: an Android app in Java over about 4 weeks"
+    ]
+  },
+  {
+    id: "cs6261", code: "CS 6261",
+    name: "Security Incident Response",
+    url: "https://www.omscentral.com/courses/security-incident-response/reviews",
+    basis: "3 reviews · 2024–26 · course changed, older reviews excluded",
+    bottom: "Light hours, but group work and thin staffing add friction. There are only 3 recent reviews.",
+    hassle: 3.5, hassleWhy: "Splunk log hunting will feel familiar, and reviewers log 5–10 hrs/wk.",
+    pairWith: "Light enough to pair, but material is time-locked, so you can't bank work early to free up time.",
+    exams: { label: "None", tone: "good" },
+    group: { label: "2 projects + discussions", tone: "warn", note: "Teams were formed without regard to time zones in 2024. Staff will reassign you on request." },
+    pains: [
+      "Feedback is slow: a \"skeleton crew of staff\" (2026)",
+      "2024 reviewers report late grades and called it the \"worst class … in terms of logistics\"",
+      "Some technical content is under-explained"
+    ],
+    coursework: [
+      "Fall 2026 grading: projects 40%, final project 30%, case studies 20%, current-event discussions 10%",
+      "Weekly case studies on past and current breaches, plus threat hunting in Splunk (largely self-taught)"
+    ]
+  },
+  {
+    id: "pubp6725", code: "PUBP 6725",
+    name: "Information Security Policies & Strategies",
+    url: "https://www.omscentral.com/courses/information-security-policies-and-strategies/reviews",
+    basis: "5 reviews · 2024–25 · course changed, older reviews excluded",
+    bottom: "Few hours but the most hassle here: two group projects and grades you may have to fight for.",
+    hassle: 4, hassleWhy: "Nothing technical, and reviewers log 3–10 hrs/wk. The effort goes into coordinating groups and contesting grades.",
+    pairWith: "Reviewers suggest pairing it or taking it in summer. Both group projects land in the first half.",
+    exams: { label: "Open-book quizzes", tone: "good", note: "4 quizzes at 5% each. Not proctored." },
+    group: { label: "2 group projects + group discussion", tone: "bad", note: "Two peer evaluations can lower a free rider's grade." },
+    pains: [
+      "Grading varies by TA, with deductions for things not in the rubric. One group's zero was reversed only on regrade",
+      "Go Phish needs a cloud email server you pay for yourself"
+    ],
+    coursework: [
+      "Fall 2026: 4 assignments at 15% each, plus Perusall reading annotations at 5% per module",
+      "A1 Go Phish (group): run a phishing campaign. A2 Organizational Policy (group)",
+      "A3 Policy Challenge, graded individually in a small-group discussion. A4 individual term paper"
+    ]
+  }
+];
+// Least hassle on the left.
+PAIRING.sort((a, b) => a.hassle - b.hassle);
+
+const PAIR_ROWS = [
+  { section: "Hassle check" },
+  { label: "Bottom line", render: c => `<div class="verdict">${c.bottom}</div>` },
+  { label: "Hassle", render: c => meter(c.hassle) + `<div class="why">${c.hassleWhy}</div>` },
+  { label: "Pairing", render: c => c.pairWith },
+  { label: "Exams", render: c => pill(c.exams) },
+  { label: "Group work", render: c => pill(c.group) },
+  { label: "Friction", render: c => list(c.pains, "downs") },
+  { label: "Coursework", render: c => list(c.coursework) }
+];
+
 function meter(v) {
   return `<div class="meter"><span>${v.toFixed(1)}</span><span class="bar"><i style="width:${v / 5 * 100}%"></i></span></div>`;
 }
 function pill(p) { return `<span class="pill ${p.tone}">${p.label}</span>` + (p.note ? `<div class="why">${p.note}</div>` : ""); }
 function list(items, cls = "") { return `<ul class="${cls}">${items.map(i => `<li>${i}</li>`).join("")}</ul>`; }
 
-const visible = new Set(COURSES.map(c => c.id));
+// One picker + grid per section, each with its own selection.
+function setup(root, courses, rows) {
+  const visible = new Set(courses.map(c => c.id));
+  const box = root.querySelector(".toggles");
+  const all = root.querySelector(".check.all input");
+  const grid = root.querySelector(".grid");
+  const inputs = {};
 
-function renderToggles() {
-  const box = document.getElementById("toggles");
-  const all = document.getElementById("t-all");
+  function renderGrid() {
+    const shown = courses.filter(c => visible.has(c.id));
+    if (!shown.length) { grid.style.gridTemplateColumns = "1fr"; grid.innerHTML = `<div class="empty">Pick a course above to see its breakdown.</div>`; return; }
+    grid.style.gridTemplateColumns = `140px repeat(${shown.length}, minmax(260px, 1fr))`;
+    let html = `<div class="cell rowlabel head"></div>` + shown.map(c =>
+      `<div class="cell head"><span class="code">${c.code}</span><a class="name" href="${c.url}" target="_blank" rel="noopener">${c.name}</a></div>`
+    ).join("");
+    rows.forEach(r => {
+      if (r.section) { html += `<div class="section">${r.section}</div>`; return; }
+      html += `<div class="cell rowlabel">${r.label}</div>` + shown.map(c => `<div class="cell">${r.render(c)}</div>`).join("");
+    });
+    grid.innerHTML = html;
+  }
+
   const syncAll = () => {
-    all.checked = visible.size === COURSES.length;
-    all.indeterminate = visible.size > 0 && visible.size < COURSES.length;
+    all.checked = visible.size === courses.length;
+    all.indeterminate = visible.size > 0 && visible.size < courses.length;
   };
-  COURSES.forEach(c => {
+  courses.forEach(c => {
     const l = document.createElement("label");
     l.className = "check";
-    l.innerHTML = `<input type="checkbox" id="t-${c.id}" checked><span class="c-code">${c.code}</span><span class="c-name">${c.name}</span>`;
-    l.querySelector("input").addEventListener("change", e => {
+    l.innerHTML = `<input type="checkbox" checked><span class="c-code">${c.code}</span><span class="c-name">${c.name}</span>`;
+    inputs[c.id] = l.querySelector("input");
+    inputs[c.id].addEventListener("change", e => {
       e.target.checked ? visible.add(c.id) : visible.delete(c.id);
       syncAll(); renderGrid();
     });
     box.appendChild(l);
   });
   all.addEventListener("change", () => {
-    COURSES.forEach(c => {
-      document.getElementById("t-" + c.id).checked = all.checked;
+    courses.forEach(c => {
+      inputs[c.id].checked = all.checked;
       all.checked ? visible.add(c.id) : visible.delete(c.id);
     });
     syncAll(); renderGrid();
   });
   syncAll();
+  renderGrid();
 }
 
-function renderGrid() {
-  const grid = document.getElementById("grid");
-  const shown = COURSES.filter(c => visible.has(c.id));
-  if (!shown.length) { grid.style.gridTemplateColumns = "1fr"; grid.innerHTML = `<div class="empty">Pick a course above to see its breakdown.</div>`; return; }
-  grid.style.gridTemplateColumns = `140px repeat(${shown.length}, minmax(260px, 1fr))`;
-  let html = `<div class="cell rowlabel head"></div>` + shown.map(c =>
-    `<div class="cell head"><span class="code">${c.code}</span><a class="name" href="${c.url}" target="_blank" rel="noopener">${c.name}</a></div>`
-  ).join("");
-  ROWS.forEach(r => {
-    if (r.section) { html += `<div class="section">${r.section}</div>`; return; }
-    html += `<div class="cell rowlabel">${r.label}</div>` + shown.map(c => `<div class="cell">${r.render(c)}</div>`).join("");
-  });
-  grid.innerHTML = html;
-}
-
-renderToggles();
-renderGrid();
+setup(document.getElementById("core"), COURSES, ROWS);
+setup(document.getElementById("pairing"), PAIRING, PAIR_ROWS);
 </script>
 </body>
 </html>
