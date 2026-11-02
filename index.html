@@ -297,7 +297,6 @@ const PAIRING = [
     basis: "7 reviews · 2024–26 · Fall 2026 syllabus",
     bottom: "The lowest-hassle pairing here: two long papers and open-book quizzes, with no group work.",
     hassle: 2, hassleWhy: "Reviewers log 2–10 hrs/wk, but the two papers bunch the work into a few heavy weeks.",
-    pairWith: "Pairs well with a medium course. One reviewer who paired it with GA wouldn't do it again.",
     exams: { label: "Open-book quizzes", tone: "warn", note: "Weekly timed quizzes (15–30 min) worth 20%, not proctored. One reviewer says the short writing assessments (10%) are proctored." },
     group: { label: "Individual", tone: "good" },
     pains: [
@@ -319,11 +318,10 @@ const PAIRING = [
     basis: "40 reviews · 2024–26 · Fall 2026 syllabus",
     bottom: "Technically trivial for you. The hassle is a lockstep weekly schedule, an assigned team and one tricky assignment.",
     hassle: 3, hassleWhy: "The Java, Git and testing work is easy for an SDE, and most reviewers log 5–12 hrs/wk.",
-    pairWith: "A common pick to pair with a harder course or for an easy summer. Some weeks stack A6 on top of the team project.",
     exams: { label: "None", tone: "good", note: "Lesson quizzes allow unlimited retakes and count toward the 3% participation grade." },
     group: { label: "Assigned team project", tone: "bad", note: "Staff form teams from a survey and won't take requests. Teammates' peer evaluations feed your 10% collaboration grade." },
     pains: [
-      "A6, a formal-logic test-design assignment, sinks many grades. Gradescope shows only a provisional score",
+      "A6, a formal-logic test-design assignment, sinks many grades. Gradescope shows only a provisional score, and some weeks it overlaps the team project",
       "Assignments open about a week before they're due, so you can't work ahead",
       "Lessons must be watched on Ed over the term, not crammed at the end, for participation credit",
       "Grades usually return in about 2 weeks. One Spring 2026 reviewer waited 4–5",
@@ -342,10 +340,10 @@ const PAIRING = [
     basis: "3 reviews · 2024–26 · course changed, older reviews excluded",
     bottom: "Light hours, but group work and thin staffing add friction. There are only 3 recent reviews.",
     hassle: 3.5, hassleWhy: "Splunk log hunting will feel familiar, and reviewers log 5–10 hrs/wk.",
-    pairWith: "Light enough to pair, but material is time-locked, so you can't bank work early to free up time.",
     exams: { label: "None", tone: "good" },
     group: { label: "2 projects + discussions", tone: "warn", note: "Teams were formed without regard to time zones in 2024. Staff will reassign you on request." },
     pains: [
+      "Material is time-locked, so you can't bank work early",
       "Feedback is slow: a \"skeleton crew of staff\" (2026)",
       "2024 reviewers report late grades and called it the \"worst class … in terms of logistics\"",
       "Some technical content is under-explained"
@@ -362,9 +360,8 @@ const PAIRING = [
     basis: "5 reviews · 2024–25 · course changed, older reviews excluded",
     bottom: "Few hours but the most hassle here: two group projects and grades you may have to fight for.",
     hassle: 4, hassleWhy: "Nothing technical, and reviewers log 3–10 hrs/wk. The effort goes into coordinating groups and contesting grades.",
-    pairWith: "Reviewers suggest pairing it or taking it in summer. Both group projects land in the first half.",
     exams: { label: "Open-book quizzes", tone: "warn", note: "4 quizzes at 5% each. Not proctored." },
-    group: { label: "2 group projects + group discussion", tone: "bad", note: "Two peer evaluations can lower a free rider's grade." },
+    group: { label: "2 group projects + group discussion", tone: "bad", note: "Both projects land in the first half. Two peer evaluations can lower a free rider's grade." },
     pains: [
       "Grading varies by TA, with deductions for things not in the rubric. One group's zero was reversed only on regrade",
       "Go Phish needs a cloud email server you pay for yourself"
@@ -383,7 +380,6 @@ const PAIR_ROWS = [
   { section: "Hassle check" },
   { label: "Bottom line", render: c => `<div class="verdict">${c.bottom}</div>` },
   { label: "Hassle", render: c => meter(c.hassle) + `<div class="why">${c.hassleWhy}</div>` },
-  { label: "Pairing", render: c => c.pairWith },
   { label: "Exams", render: c => pill(c.exams) },
   { label: "Group work", render: c => pill(c.group) },
   { label: "Friction", render: c => list(c.pains, "downs") },
@@ -397,15 +393,15 @@ const REQUIRED = [
     name: "Introduction to Graduate Algorithms",
     url: "https://www.omscentral.com/courses/introduction-to-graduate-algorithms/reviews",
     basis: "48 reviews · Spring 2025–Summer 2026 · Fall 2026 syllabus",
-    bottom: "Exam-only and graded hard. Passing takes learning the staff's answer format as much as the algorithms, and you need 70% for a B.",
-    youDiff: 4.5, youWhy: "Undergrad algorithms gives you a head start on DP and graphs, but day-to-day coding helps little: almost the whole grade is closed-book algorithm design under proctoring. Reviewers mostly log 12–20 hrs/wk, with spikes before exams.",
-    exams: { label: "5 closed-book proctored exams", tone: "bad", note: "Fall 2026: Exams 1–2 at 10% each, Exams 3–4 at 20% each, and a cumulative multiple-choice final at 30% (+10% extra credit). Exams mix free-response design questions with multiple choice." },
+    bottom: "Graded almost entirely on exams, and graded hard. Learning the staff's answer format matters as much as the algorithms.",
+    youDiff: 4.5, youWhy: "Undergrad algorithms gives you a head start on DP and graphs, but day-to-day coding helps little. Reviewers mostly log 12–20 hrs/wk, with spikes before exams.",
+    exams: { label: "5 closed-book proctored exams", tone: "bad", note: "Fall 2026: Exams 1–2 at 10% each, Exams 3–4 at 20% each, and a cumulative multiple-choice final at 30% (+10% extra credit). Past exams mixed free-response design questions with multiple choice." },
     structure: [
       "Topics: dynamic programming, divide and conquer, randomized algorithms (RSA), graphs, max flow, linear programming and NP-completeness. Required textbook: DPV",
       "Weekly homework (written + Python coding) is optional and worth 0%, but it mirrors the exam questions. Practice solutions come out mid-week",
       "The other 10% is quizzes: content 6% (open note), logistics 3%, format 1%",
-      "Cutoffs are A ≥85% and B ≥70% with no rounding, so 84.99% is a B",
-      "The format keeps changing: Spring 2026 had 3 exams weighted 25/30/35 by your score. There are no reviews of the Fall 2026 five-exam format yet",
+      "You need 70% for a B (85% for an A), with no rounding: 84.99% is a B",
+      "The format keeps changing: Spring 2026 had 3 exams weighted 25/30/35 by your score, and the five-exam format has no reviews yet",
       "Summer covers the same material in fewer weeks, and reviewers found its exams harder"
     ],
     gotchas: [
@@ -413,7 +409,7 @@ const REQUIRED = [
       "A correct but brute-force or slower-than-expected algorithm is graded as wrong",
       "For graph problems you must use known algorithms as unmodified black boxes. AI study help tends to modify them",
       "In 3-exam terms, Exam 1 (DP, divide and conquer) was the weed-out. Many reviewers scored 35–41/60 on it and still passed",
-      "Proctoring is strict: Honorlock with a side-angle camera (you may need a webcam or tripod), room scan, about 3 hours with no break. You can't discuss the course with anyone while an exam window is open",
+      "Honorlock with a side-angle camera (you may need a webcam or tripod) and a room scan, for about 3 hours with no break. You can't discuss the course with anyone while an exam window is open",
       "Exam feedback doesn't show which multiple-choice questions you missed",
       "A regrade re-checks the whole question and can lower your score. Reviewers also report inconsistent grading between TAs",
       "Lectures are old and don't always match the current instructor's approach"
