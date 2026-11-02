@@ -23,6 +23,7 @@ body { margin: 0; }
   --warn: #9a6200; --warn-bg: #fbefd9;
   --bad: #b3372f;  --bad-bg: #fbe4e2;
   --neutral-bg: #eceef3;
+  --sun: #d9730d;
   --font-display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -32,7 +33,7 @@ body { margin: 0; }
     --bg: #12151d; --surface: #1a1e29; --fg: #e6e8ef; --muted: #9aa1b4; --line: #2b3040;
     --accent: #d2bc7a; --accent-soft: #2e2a1c;
     --good: #6fd09d; --good-bg: #173326; --warn: #e8b55a; --warn-bg: #352812;
-    --bad: #f08a80; --bad-bg: #3a1c1a; --neutral-bg: #252a37;
+    --bad: #f08a80; --bad-bg: #3a1c1a; --neutral-bg: #252a37; --sun: #f5a04a;
     color-scheme: dark;
   }
 }
@@ -40,7 +41,7 @@ body { margin: 0; }
   --bg: #12151d; --surface: #1a1e29; --fg: #e6e8ef; --muted: #9aa1b4; --line: #2b3040;
   --accent: #d2bc7a; --accent-soft: #2e2a1c;
   --good: #6fd09d; --good-bg: #173326; --warn: #e8b55a; --warn-bg: #352812;
-  --bad: #f08a80; --bad-bg: #3a1c1a; --neutral-bg: #252a37;
+  --bad: #f08a80; --bad-bg: #3a1c1a; --neutral-bg: #252a37; --sun: #f5a04a;
   color-scheme: dark;
 }
 body {
@@ -51,7 +52,14 @@ body {
   padding-block: 32px 48px;
 }
 .wrap { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-header { display: flex; flex-direction: column; gap: 6px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.theme-btn {
+  flex: none; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--fg);
+}
+.theme-btn:hover { border-color: var(--accent); }
+.theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sun { color: var(--sun); display: inline-block; vertical-align: -1px; margin-left: 6px; }
 h1 { font-family: var(--font-display); font-weight: 700; font-size: 28px; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
 h2 { font-family: var(--font-display); font-weight: 700; font-size: 21px; margin: 16px 0 0; letter-spacing: -0.01em; }
 .block { display: flex; flex-direction: column; gap: 16px; }
@@ -111,6 +119,7 @@ footer { font-size: 12px; color: var(--muted); max-width: 80ch; }
 <div class="wrap">
   <header>
     <h1>OMSCS Course Compare</h1>
+    <button class="theme-btn" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
   </header>
 
   <section class="block" id="core">
@@ -476,6 +485,10 @@ function meter(v) {
 function pill(p) { return `<span class="pill ${p.tone}">${p.label}</span>` + (p.note ? `<div class="why">${p.note}</div>` : ""); }
 function list(items, cls = "") { return `<ul class="${cls}">${items.map(i => `<li>${i}</li>`).join("")}</ul>`; }
 
+// Offered in summer per the official OMSCS Course Offering History (Fall 2022–Summer 2026).
+const SUMMER = new Set(["cs6747", "cs6265", "cse6220", "cs7295", "cs6290", "cs6515", "cs8803o15", "cs6603", "cs7240", "cs6300", "pubp6725"]);
+const SUN = `<svg class="sun" viewBox="0 0 24 24" width="15" height="15" role="img" aria-label="Offered in summer"><title>Offered in summer</title><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+
 // One picker + grid per section, each with its own selection. A section without a picker shows every course.
 function setup(root, courses, rows) {
   const visible = new Set(courses.map(c => c.id));
@@ -490,7 +503,7 @@ function setup(root, courses, rows) {
     if (!shown.length) { grid.style.gridTemplateColumns = "1fr"; grid.innerHTML = `<div class="empty">Pick a course above to see its breakdown.</div>`; return; }
     grid.style.gridTemplateColumns = `140px repeat(${shown.length}, minmax(260px, 1fr))`;
     let html = `<div class="cell rowlabel head"></div>` + shown.map(c =>
-      `<div class="cell head"><span class="code">${c.code}</span><a class="name" href="${c.url}" target="_blank" rel="noopener">${c.name}</a></div>`
+      `<div class="cell head"><span class="code">${c.code}</span><a class="name" href="${c.url}" target="_blank" rel="noopener">${c.name}${SUMMER.has(c.id) ? SUN : ""}</a></div>`
     ).join("");
     rows.forEach(r => {
       if (r.section) { html += `<div class="section">${r.section}</div>`; return; }
@@ -528,6 +541,17 @@ function setup(root, courses, rows) {
 setup(document.getElementById("core"), COURSES, ROWS);
 setup(document.getElementById("required"), REQUIRED, REQ_ROWS);
 setup(document.getElementById("pairing"), PAIRING, PAIR_ROWS);
+
+// Theme: follows the OS until toggled, then remembers the choice for this browser.
+(() => {
+  const root = document.documentElement;
+  try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch (e) {}
+  document.getElementById("theme").addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+  });
+})();
 </script>
 </body>
 </html>
