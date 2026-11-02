@@ -184,7 +184,7 @@ const COURSES = [
     bottom: "A rigorous, high-value systems course. Take it alone, because the exams are the risk.",
     youDiff: 4, youWhy: "The labs are fair for an SDE. The exams ask you to design and analyze parallel algorithms, with averages around 50.",
     relevance: 4.5, relWhy: "Core parallel algorithms: memory hierarchy, shared memory and message passing, each with a performance model.",
-    exams: { label: "Proctored open-book midterm + final", tone: "warn", note: "Honorlock. Notes and internet allowed for lookup only. Heavily curved (about +25%)." },
+    exams: { label: "Proctored open-book midterm + final", tone: "bad", note: "Honorlock. Notes and internet allowed for lookup only. Heavily curved (about +25%)." },
     group: { label: "Individual", tone: "good" },
     coursework: [
       "A Lab 0 warm-up and 3 labs in OpenMP, MPI and CUDA, plus an extra-credit lab worth about 10%",
@@ -201,7 +201,7 @@ const COURSES = [
     bottom: "Great lectures and a solid foundation, held back by dull projects and slow grading.",
     youDiff: 3, youWhy: "It builds on undergrad computer organization but goes deeper. The C++ simulator projects are easy for an SDE.",
     relevance: 3.5, relWhy: "Pipelining, branch prediction, Tomasulo, caches and coherence, taught well but on dated hardware.",
-    exams: { label: "Proctored midterm + final", tone: "warn", note: "About 50% of the grade. Open notes, no internet, via Honorlock." },
+    exams: { label: "Proctored midterm + final", tone: "bad", note: "About 50% of the grade. Open notes, no internet, via Honorlock." },
     group: { label: "Partner on some projects", tone: "good", note: "Students share benchmark results to sanity-check each other." },
     coursework: [
       "4 projects on the SESC C++ simulator in a VM, mostly parameter tuning with little code. Answers go in a Word template",
@@ -217,7 +217,7 @@ const COURSES = [
     bottom: "A promising modern course with a light exam load, but it's new and still changing.",
     youDiff: 3, youWhy: "CUDA tuning is likely new, but approachable for a C/C++ developer.",
     relevance: 4, relWhy: "CUDA, GPU architecture and transformer attention kernels. Broad rather than deep.",
-    exams: { label: "Quizzes + proctored final", tone: "good", note: "Quizzes (10%) allow one attempt. The final (10%) is on Honorlock with one sheet of notes, and an A needs at least 40% on it." },
+    exams: { label: "Quizzes + proctored final", tone: "bad", note: "Quizzes (10%) allow one attempt. The final (10%) is on Honorlock with one sheet of notes, and an A needs at least 40% on it." },
     group: { label: "Individual", tone: "good" },
     coursework: [
       "Summer 2026 projects on the ICE cluster: P1 CUDA basics (5%), P2 CUDA optimization (20%), P3 warp scheduler and tensor-core timing in a GPU simulator (20%), P4 ML algorithms in CUDA (15%), P5 a GPU code-analysis pass in Python (20%)",
@@ -233,7 +233,7 @@ const COURSES = [
     bottom: "A niche course on cyber-physical systems (CPS) security that's untested online.",
     youDiff: 3.5, youWhy: "Python/C++ and Ghidra are approachable. Embedded systems, real-time operating systems (RTOS), control theory and drone flight software are likely new. This rating is based on the syllabus alone.",
     relevance: 3.5, relWhy: "Graduate-level CPS security: drone architecture, sensor spoofing, firmware analysis and adversarial ML. It's niche outside defense and robotics, and it doesn't count toward any specialization.",
-    exams: { label: "16 quizzes + proctored final", tone: "warn", note: "Quizzes are 32%. The final is 18%, on Honorlock with no outside aids." },
+    exams: { label: "16 quizzes + proctored final", tone: "bad", note: "Quizzes are 32%. The final is 18%, on Honorlock with no outside aids." },
     group: { label: "Individual", tone: "good", note: "No group work in the syllabus." },
     coursework: [
       "5 mini projects (30%) in Python/C++ using the ArduPilot SITL drone simulator, Gazebo and Ghidra/IDA, on themes like MAVLink packet security and sensor-spoofing detection. You submit short reports plus working code",
@@ -265,7 +265,7 @@ const COURSES = [
     bottom: "The classic hard OMSCS systems course. You implement Paxos and a sharded, transactional key-value store yourself, which is directly valuable for backend work.",
     youDiff: 4.5, youWhy: "Java and testing are familiar. Making consensus code survive DSLabs' exhaustive tests is the hard part. Recent reviewers log 12–35 hrs/wk, and Paxos and Project 4 take the most time.",
     relevance: 5, relWhy: "Core distributed systems: RPC semantics, replication, consensus, sharding and transactions, with papers on real systems.",
-    exams: { label: "Proctored midterm + final", tone: "warn", note: "40% total, on Honorlock with access to the papers. Not cumulative. Mostly multiple choice, and questions draw on the papers as much as the slides." },
+    exams: { label: "Proctored midterm + final", tone: "bad", note: "40% total, on Honorlock with access to the papers. Not cumulative. Mostly multiple choice, and questions draw on the papers as much as the slides." },
     group: { label: "Individual", tone: "good", note: "One Fall 2024 reviewer says Project 4 allowed a partner." },
     coursework: [
       "5 Java projects (55%) on the DSLabs framework: P0 intro (5%), P1 exactly-once RPC (10%), P2 primary-backup (10%), P3 Paxos (15%), P4 sharded KV store with two-phase commit (15%)",
@@ -298,7 +298,7 @@ const PAIRING = [
     bottom: "The lowest-hassle pairing here: two long papers and open-book quizzes, with no group work.",
     hassle: 2, hassleWhy: "Reviewers log 2–10 hrs/wk, but the two papers bunch the work into a few heavy weeks.",
     pairWith: "Pairs well with a medium course. One reviewer who paired it with GA wouldn't do it again.",
-    exams: { label: "Open-book quizzes", tone: "good", note: "Weekly timed quizzes (15–30 min) worth 20%, not proctored. One reviewer says the short writing assessments (10%) are proctored." },
+    exams: { label: "Open-book quizzes", tone: "warn", note: "Weekly timed quizzes (15–30 min) worth 20%, not proctored. One reviewer says the short writing assessments (10%) are proctored." },
     group: { label: "Individual", tone: "good" },
     pains: [
       "Rubrics don't say how much effort is enough. One reviewer's report ran past 20 pages",
@@ -363,7 +363,7 @@ const PAIRING = [
     bottom: "Few hours but the most hassle here: two group projects and grades you may have to fight for.",
     hassle: 4, hassleWhy: "Nothing technical, and reviewers log 3–10 hrs/wk. The effort goes into coordinating groups and contesting grades.",
     pairWith: "Reviewers suggest pairing it or taking it in summer. Both group projects land in the first half.",
-    exams: { label: "Open-book quizzes", tone: "good", note: "4 quizzes at 5% each. Not proctored." },
+    exams: { label: "Open-book quizzes", tone: "warn", note: "4 quizzes at 5% each. Not proctored." },
     group: { label: "2 group projects + group discussion", tone: "bad", note: "Two peer evaluations can lower a free rider's grade." },
     pains: [
       "Grading varies by TA, with deductions for things not in the rubric. One group's zero was reversed only on regrade",
