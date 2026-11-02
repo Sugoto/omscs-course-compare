@@ -148,11 +148,11 @@ const COURSES = [
     name: "Advanced Topics in Malware Analysis",
     url: "https://www.omscentral.com/courses/advanced-topics-in-malware-analysis/reviews",
     basis: "18 reviews · 2020–26",
-    bottom: "The strongest security elective here for learning. Find a partner and budget about 15 hrs/wk.",
+    bottom: "The strongest security elective here for learning. Do it with your friend and budget about 15 hrs/wk.",
     youDiff: 3.5, youWhy: "Ghidra plugins and C++ PIN tools are familiar ground. Reading x86 assembly at scale and program-analysis theory are new.",
     relevance: 4.5, relWhy: "Graduate-level reverse engineering and binary analysis, though more binary analysis than malware.",
     exams: { label: "None", tone: "good", note: "Graded entirely on labs and paper summaries." },
-    group: { label: "Optional partner", tone: "good", note: "Most labs can be done solo or in pairs. Keep the same partner for Labs 3–4 and 5–6." },
+    group: { label: "Pick your own partner", tone: "good", note: "Most labs can be done solo or with a partner you choose. Keep the same partner for Labs 3–4 and 5–6." },
     coursework: [
       "Fall 2026: 7 equally weighted labs (90% total) on one real Windows malware sample. Lab 7, symbolic analysis, is new",
       "Lab 2: comment 1–2k lines of assembly (40–50 hrs). Labs 3–4: Ghidra plugins for def-use and data dependence (about 30 hrs each)",
@@ -249,7 +249,7 @@ const COURSES = [
     youDiff: 4, youWhy: "Go/C++ and Kubernetes code will feel familiar. SDN and NFV networking (Mininet, Ryu, OpenFlow) are likely new. Recent reviewers log 15–40 hrs/wk, and AOS (CS 6210) is the listed prerequisite.",
     relevance: 4.5, relWhy: "You build each layer of the cloud stack yourself: networking, a MapReduce runtime, network-function orchestration and a cloud app. It's directly useful for backend SDE work.",
     exams: { label: "None", tone: "good", note: "16 lecture quizzes, which need 100% but allow unlimited attempts." },
-    group: { label: "Pairs (optional)", tone: "good", note: "Pick your own partner or work alone. Staff check GitHub commits for equal contribution." },
+    group: { label: "Pick your own partner", tone: "good", note: "Optional pairs, or work alone. Staff check GitHub commits for equal contribution." },
     coursework: [
       "4 modules, each with recorded lectures, weekly workshops and a capstone project: SDN (Mininet, Ryu, OpenFlow), a MapReduce runtime on Kubernetes (Go or C++), NFV orchestration, and a self-defined cloud app on Azure",
       "Graded A or F: an A needs 100% on every quiz and an \"Accept\" on every workshop and project",
@@ -334,6 +334,28 @@ const PAIRING = [
     ]
   },
   {
+    id: "cs7240", code: "CS 7240",
+    name: "Modern Internet Research Methods",
+    url: "https://omscs.gatech.edu/cs-7240-modern-internet-research-methods",
+    basis: "No reviews found · Fall 2026 syllabus",
+    bottom: "A self-directed research paper you can write with your friend. No exams, but weekly meetings and two talks make it more structured than the other pairings.",
+    hassle: 3, hassleWhy: "There are no reviews yet, so this rating is from the syllabus alone. Effort depends on your project: a literature review needs no coding, while a system or data study can grow large.",
+    exams: { label: "Open-book quizzes", tone: "warn", note: "One quiz per module (5% total), open book and open resources, all due by the end of term." },
+    group: { label: "Self-picked team of 2–4", tone: "good", note: "You form your own group. Team and topic lock once the proposal is in." },
+    pains: [
+      "Weekly check-in meetings with staff (14%) from week 2. You must meet the professor after the proposal and after each milestone",
+      "Two talks: a 5–10 minute roundtable presentation on your project and a recorded 15–20 minute final presentation",
+      "Fully open-ended: you define your own research question and aim it at a real conference",
+      "Each student files the same weekly log on both Canvas and Ed"
+    ],
+    coursework: [
+      "Fall 2026 grading: research milestones 36%, weekly check-ins 14%, roundtable discussions 10%, early project steps (brainstorming, related work, proposal, setup) 19%, final paper 6%, final talk 6%, final code 4%, quizzes 5%. Up to +13% extra credit",
+      "15 modules of prerecorded lectures, each covering 2–4 research papers, in any order",
+      "Topics: Internet scanning and measurement, BGP and DNS hijacking, censorship detection, and abuse and misinformation on online platforms",
+      "Project types include literature reviews, surveys, data analysis, ML studies, system builds and replications. Coding projects expect intermediate Python"
+    ]
+  },
+  {
     id: "cs6300", code: "CS 6300",
     name: "Software Development Process",
     url: "https://www.omscentral.com/courses/software-development-process/reviews",
@@ -363,7 +385,7 @@ const PAIRING = [
     bottom: "Light hours, but group work and thin staffing add friction. There are only 3 recent reviews.",
     hassle: 3.5, hassleWhy: "Splunk log hunting will feel familiar, and reviewers log 5–10 hrs/wk.",
     exams: { label: "None", tone: "good" },
-    group: { label: "2 projects + discussions", tone: "warn", note: "Teams were formed without regard to time zones in 2024. Staff will reassign you on request." },
+    group: { label: "Assigned teams: 2 projects + discussions", tone: "bad", note: "Staff form the teams, without regard to time zones in 2024. Staff will reassign you on request." },
     pains: [
       "Material is time-locked, so you can't bank work early",
       "Feedback is slow: a \"skeleton crew of staff\" (2026)",
